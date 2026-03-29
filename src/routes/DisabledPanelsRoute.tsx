@@ -1,0 +1,105 @@
+import { Box, Callout, Code, Header } from "react-lib-tools";
+import { html as DisabledPanelHTML } from "../../public/generated/examples/DisabledPanel.json";
+import { html as DisabledPanelAndSeparatorHTML } from "../../public/generated/examples/DisabledPanelAndSeparator.json";
+import { html as DisabledPanelsHTML } from "../../public/generated/examples/DisabledPanels.json";
+import { html as DisabledSeparatorHTML } from "../../public/generated/examples/DisabledSeparator.json";
+import { Link } from "../components/Link";
+import { Group } from "../components/styled-panels/Group";
+import { Panel } from "../components/styled-panels/Panel";
+import { Separator } from "../components/styled-panels/Separator";
+
+export default function DisabledPanelsRoute() {
+  return (
+    <Box direction="column" gap={4}>
+      <Header section="Examples" title="Disabling interactions" />
+      <div>
+        <code>Panel</code> and <code>Separator</code> components can be disabled
+        to disable or limit resize behavior. Below are a few examples of how
+        this can be used to implement different types of UIs.
+      </div>
+      <div>
+        In groups with only two panels, disabling a separator is sufficient to
+        completely prevent resizing.
+      </div>
+      <Code html={DisabledSeparatorHTML} />
+      <Group>
+        <Panel minSize={50}>left</Panel>
+        <Separator disabled />
+        <Panel minSize={50}>right</Panel>
+      </Group>
+      <div>
+        The same applies to disabling one or both panels when there is no
+        explicit separator element.
+      </div>
+      <Callout intent="primary">
+        Note this is functionally the same as disabling the entire{" "}
+        <code>Group</code> component.
+      </Callout>
+      <Code html={DisabledPanelsHTML} />
+      <Group>
+        <Panel disabled minSize={50}>
+          left
+        </Panel>
+        <Panel disabled minSize={50}>
+          right
+        </Panel>
+      </Group>
+      <div>
+        In groups with three or more panels, disabling a separator does not
+        completely prevent a panel from being resized. In the example below,
+        resizing the center panel can indirectly cause the left panel to be
+        resized as well.
+      </div>
+      <Group>
+        <Panel minSize={50}>left</Panel>
+        <Separator disabled />
+        <Panel minSize={50}>center</Panel>
+        <Separator />
+        <Panel minSize={50}>right</Panel>
+      </Group>
+      <div>
+        Disabling a panel prevents it from being resized, though its separator
+        can still be used to resize other panels.
+      </div>
+      <Code html={DisabledPanelHTML} />
+      <Group>
+        <Panel minSize={50}>left</Panel>
+        <Separator />
+        <Panel disabled minSize={50}>
+          center (disabled)
+        </Panel>
+        <Separator />
+        <Panel minSize={50}>right</Panel>
+      </Group>
+      <div>
+        When there is no separator, a disabled panel's edges can also be used to
+        resize other panels.
+      </div>
+      <Group>
+        <Panel minSize={50}>left</Panel>
+        <Panel disabled minSize={50}>
+          center (disabled)
+        </Panel>
+        <Panel minSize={50}>right</Panel>
+      </Group>
+      <div>
+        You can also disable both a panel and its separator to completely
+        prevent them from being resized or interacted with in any way.
+      </div>
+      <Code html={DisabledPanelAndSeparatorHTML} />
+      <Group>
+        <Panel disabled minSize={50}>
+          left (disabled)
+        </Panel>
+        <Separator disabled />
+        <Panel minSize={50}>center</Panel>
+        <Separator />
+        <Panel minSize={50}>right</Panel>
+      </Group>
+      <Callout intent="primary">
+        Note that a disabled <code>Panel</code> can still be resized using the{" "}
+        <Link to="/imperative-api/panel">imperative API</Link>.
+      </Callout>
+    </Box>
+  );
+}
