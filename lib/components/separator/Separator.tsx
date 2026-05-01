@@ -32,6 +32,7 @@ export function Separator({
   children,
   className,
   disabled,
+  disableDoubleClick,
   elementRef: elementRefProp,
   id: idProp,
   style,
@@ -40,7 +41,8 @@ export function Separator({
   const id = useId(idProp);
 
   const stableProps = useStableObject({
-    disabled
+    disabled,
+    disableDoubleClick
   });
 
   const [aria, setAria] = useState<{
@@ -52,6 +54,7 @@ export function Separator({
 
   const [dragState, setDragState] =
     useState<InteractionState["state"]>("inactive");
+  const [isFocused, setIsFocused] = useState(false);
 
   const elementRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,7 +65,7 @@ export function Separator({
     id: groupId,
     orientation: groupOrientation,
     registerSeparator,
-    toggleSeparatorDisabled
+    updateSeparatorProps
   } = useGroupContext();
 
   const orientation =
@@ -75,6 +78,7 @@ export function Separator({
     if (element !== null) {
       const separator: RegisteredSeparator = {
         disabled: stableProps.disabled,
+        disableDoubleClick: stableProps.disableDoubleClick,
         element,
         id
       };
@@ -126,12 +130,31 @@ export function Separator({
 
   // Not all props require re-registering the separator;
   useEffect(() => {
-    toggleSeparatorDisabled(id, !!disabled);
-  }, [disabled, id, toggleSeparatorDisabled]);
+    updateSeparatorProps(id, { disabled, disableDoubleClick });
+  }, [disabled, disableDoubleClick, id, updateSeparatorProps]);
 
   let cursor: Properties["cursor"] = undefined;
   if (disabled && !disableCursor) {
     cursor = "not-allowed";
+  }
+
+  let dataSeparator = undefined;
+  if (disabled) {
+    dataSeparator = "disabled";
+  } else {
+    switch (dragState) {
+      case "active": {
+        dataSeparator = "active";
+        break;
+      }
+      default: {
+        if (isFocused) {
+          dataSeparator = "focus";
+        } else {
+          dataSeparator = dragState;
+        }
+      }
+    }
   }
 
   return (
@@ -145,9 +168,11 @@ export function Separator({
       aria-valuenow={aria.valueNow}
       children={children}
       className={className}
-      data-separator={disabled ? "disabled" : dragState}
+      data-separator={dataSeparator}
       data-testid={id}
       id={id}
+      onBlur={() => setIsFocused(false)}
+      onFocus={() => setIsFocused(true)}
       ref={mergedRef}
       role="separator"
       style={{

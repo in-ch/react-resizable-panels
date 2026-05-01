@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.10.0
+
+- [705](https://github.com/bvaughn/react-resizable-panels/pull/705): Add `data-separator="focus"` state for `Separator` elements for more consistent custom CSS styles.
+
+## 4.9.0
+
+- [702](https://github.com/bvaughn/react-resizable-panels/pull/702): Add `disableDoubleClick` prop to `Separator` to enable turning _off_ the double-click size reset behavior.
+
 ## 4.8.0
 
 - [699](https://github.com/bvaughn/react-resizable-panels/pull/699): `useDefaultLayout` hook automatically migrates legacy layouts to version 4 format; see issue [605](https://github.com/bvaughn/react-resizable-panels/issues/605) for details on how this works.
